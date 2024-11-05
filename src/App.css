@@ -1,0 +1,470 @@
+@import url('https://fonts.googleapis.com/css2?family=Teko:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+  --background-color: rgba(46, 46, 46, 0.65);
+  --text-color: white;
+  --sidebar-bg-color: rgba(26, 26, 26, 0.65);
+  --temp-range-card-bg: rgba(25, 25, 25, 0.6);
+  --recently-searched-card-bg: rgba(20, 20, 20, 0.5);
+  --forecast-bg-color: rgba(50, 50, 50, 0.3);
+  --button-bg-color: #444;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  align-items: flex-start;
+  font-family: "Teko", sans-serif;
+  font-size: large;
+  font-weight: 800;
+  color: white;
+  background-size: 125%;
+  background-position: 100% center;
+  transition: background 0.5s;
+  overflow: hidden;
+  animation: moveBackground 60s linear infinite;
+}
+
+@keyframes moveBackground {
+  0% { background-position: 100% center; }
+  100% { background-position: 0% center; }
+}
+
+.rain-container {
+  position: fixed; 
+  top: 0;
+  left: 0; 
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.rain-layer {
+  position: absolute; 
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.raindrop {
+  position: absolute;
+  top: -30px;
+  width: 2px;
+  height: 30px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(173, 216, 230, 0.8) 50%, rgba(255, 255, 255, 0) 100%);
+  opacity: 0.5;
+  animation-name: fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(100vh);
+  }
+}
+
+.light-rain .raindrop {
+  animation-duration: 0.9s;
+}
+
+.moderate-rain .raindrop {
+  animation-duration: 0.65s;
+}
+
+.heavy-rain .raindrop {
+  animation-duration: 0.35s;
+}
+
+
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  padding: 2%;
+}
+
+.sidebar {
+  position: relative;
+  width: 15vw;
+  max-width: 250px;
+  height: 85vh;
+  background: linear-gradient(145deg, rgba(46, 46, 46, 0.65), rgba(26, 26, 26, 0.65));
+  border-radius: 1.5rem;
+  padding: 2rem;
+  border: solid 0.5px;
+  backdrop-filter: blur(15px);
+  color: white;
+  margin: 1%;
+  margin-top: -0.2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#status-text {
+  margin-bottom: 2rem;
+}
+
+.status {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.icon {
+  margin-right: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2rem;
+  position: relative;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+
+.actions {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  position: relative;  
+}
+
+.search-input {
+  padding: 0.8rem;
+  border-radius: 0.5rem;
+  border: none;
+  outline: none;
+  margin-right: 1rem;  
+  transition: width 0.3s, opacity 0.3s; 
+  width: 0; 
+  opacity: 0;  
+  flex: 0 1 auto;  
+}
+
+.search-button {
+  padding: 0.4rem; 
+  background-image: url('../src/assets/mag-glass.png');
+  background-size: 60%;  
+  background-repeat: no-repeat;  
+  background-position: center;  
+  color: black;
+  cursor: pointer;
+  border: none;
+  border-radius: 50%;  
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem; 
+  height: 2.5rem;  
+  font-size: 1.2rem; 
+  transition: opacity 0.3s;
+}
+
+
+.actions:hover .search-input,
+.search-input:focus {
+  width: 12rem;  
+  opacity: 1; 
+  margin-right: 1rem;  
+  transition: width 0.3s, opacity 0.3s;  
+}
+
+.search-input:focus + .search-button {
+  opacity: 0;  
+  pointer-events: none; 
+}
+
+.download {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #444;
+  color: white;
+  cursor: pointer;
+  width: 210px;
+}
+
+.weather-info {
+  margin-top: 2rem;
+}
+
+.temperature-container {
+  display: flex;
+  align-items: baseline;
+}
+
+.temperature {
+  font-family: 'Arial', sans-serif;
+  font-size: 10vw;
+  font-weight: 300;
+  margin: 0;
+  background: linear-gradient(45deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 57%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.temp-range {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: -9rem;
+}
+
+.temp-range-card {
+  background-color: rgba(25, 25, 25, 0.6);
+  border-radius: 95px;
+  margin: 5px;
+  margin-left: 2rem;
+  padding: 0.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 8rem;
+  text-align: center;
+}
+
+.high-temp,
+.low-temp {
+  font-size: 1rem;
+  color: #ccc;
+}
+
+.condition {
+  font-size: 3.5rem;
+  margin-top: 0.8rem;
+  text-transform: capitalize;
+}
+
+.recently-searched-container {
+  position: absolute;
+  top: 20%;
+  right: 2%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 80vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.recently-searched {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.recently-searched-card {
+  background-color: rgba(20, 20, 20, 0.5);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  margin-bottom: 1rem;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.recently-searched-card span {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+}
+
+.forecast {
+  background: rgba(50, 50, 50, 0.3);
+  display: flex;
+  justify-content: space-between;
+  border-radius: 1rem;
+  position: absolute;
+  bottom: 0%;
+  left: 5%;
+  right: 5%;
+  padding: 0.5rem;
+  height: auto;
+  width: auto;
+}
+
+.day {
+  padding: 1rem;
+  flex: 1;
+  text-align: center;
+}
+
+.day h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.day p {
+  margin: 0;
+}
+
+.status {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.UVIndexChart {
+  width: 100%;
+  height: 40%;
+}
+
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 20vw;
+  }
+
+  .download {
+    width: 100%;
+  }
+
+  .recently-searched-card {
+    width: 95%;
+  }
+
+  .forecast {
+    flex-direction: column;
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+  }
+
+  .temperature {
+    font-size: 9vw;
+  }
+
+  .condition {
+    font-size: 3rem;
+  }
+}
+
+@media (max-width: 900px) {
+  body {
+    font-size: medium;
+  }
+
+  .temperature {
+    font-size: 13vw;
+  }
+
+  .high-temp,
+  .low-temp {
+    font-size: 0.9rem;
+  }
+
+  .temp-range-card {
+    width: 70%;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .recently-searched-container {
+    top: 10%;
+    right: 1%;
+  }
+
+  .condition {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .sidebar {
+    width: 100%;
+    height: auto;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-input {
+    margin-bottom: 1rem;
+  }
+
+  .forecast {
+    flex-direction: column;
+  }
+
+  .day {
+    padding: 0.5rem;
+  }
+
+  .temperature {
+    font-size: 18vw;
+  }
+
+  .condition {
+    font-size: 2rem;
+  }
+
+  .download {
+    width: 100%;
+  }
+}
+
+@media (max-width: 400px) {
+  body {
+    font-size: small;
+  }
+
+  .sidebar {
+    height: auto; /* Change height to auto */
+  }
+
+  .temperature {
+    font-size: 22vw;
+  }
+
+  .condition {
+    font-size: 1.8rem;
+  }
+
+  .temp-range-card {
+    width: 90%;
+  }
+
+  .download {
+    padding: 0.6rem 1rem;
+  }
+}
