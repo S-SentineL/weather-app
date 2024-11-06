@@ -176,7 +176,6 @@ body {
 
 .search-button {
   padding: 0.4rem; 
-  background-image: url('../src/assets/mag-glass.png');
   background-size: 60%;  
   background-repeat: no-repeat;  
   background-position: center;  
