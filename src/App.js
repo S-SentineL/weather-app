@@ -202,7 +202,7 @@ const weatherImages = {
           day: 'https://imgur.com/IUk42lM.png',
           afternoon: 'https://imgur.com/q6t6ptQ.png',
           evening: 'https://imgur.com/YWU1GuA.png',
-          night: 'https://imgur.com/zO6SCUc.png',
+          night: 'https://imgur.com/L92szpF.png',
         },
         cloudy: {
             few: 'https://imgur.com/pjNwJX0.png',
