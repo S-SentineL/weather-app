@@ -212,7 +212,7 @@ const weatherImages = {
             few: 'https://imgur.com/pjNwJX0.png',
             scattered: 'https://imgur.com/g7xc2z7.png',
             broken: 'https://imgur.com/N6XPp0z.png',
-            overcast: 'https://imgur.com/hk9L4eD.png',
+            overcast: 'https://imgur.com/fgvy2BA.png',
         },
         rain: {
           light: 'https://imgur.com/m0gMBXV.png',
