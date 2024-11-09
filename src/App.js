@@ -66,8 +66,11 @@ const renderRainAnimation = () => {
 
 const getTimeOfDay = (offset) => {
   const utcTime = Date.now();
-  const locationTime = new Date(utcTime + offset * 1000); // Apply the timezone offset
+  const locationTime = new Date(utcTime); // Apply the timezone offset
   const hour = locationTime.getHours(); // Get the hour in local time
+
+  console.log("UTC Time:", utcTime);
+  console.log("Hour:", hour);
 
   if (hour >= 5 && hour < 12) {
       return 'day';
@@ -79,6 +82,8 @@ const getTimeOfDay = (offset) => {
       return 'night';
   }
 };
+
+
 
 const fetchWeather = async (city, lat, lon) => {
   let weatherAPI, forecastAPI;
@@ -184,7 +189,6 @@ const fetchRecentCitiesWeather = async () => {
 };
 
 useEffect(() => {
-    // Get user's location and fetch weather
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
@@ -240,7 +244,7 @@ const weatherImages = {
             rain: 'https://imgur.com/bArLcQa.png',
             heavyRain: 'https://imgur.com/CXRhOvi.png',
             lightSnow: 'https://imgur.com/FsVKOqB.png',
-            snow: 'https://imgur.com/t2HUmJp.png',
+            snow: 'https://imgur.com/G40H7Lx.png',
             general: 'https://imgur.com/JX2dgS8.png',
         },
         other: {
@@ -383,7 +387,9 @@ const useLiveLocationTime = (offset) => {
     return () => clearInterval(interval); // Cleanup interval on unmount
   }, [offset]); // Effect re-runs when offset changes
 
+  console.log("Location time:", locationTime);
   return locationTime;
+  
 };
 
 const capitalizeFirstLetter = (string) => {
