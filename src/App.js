@@ -210,7 +210,7 @@ const weatherImages = {
     night: 'https://imgur.com/L92szpF.png',
   },
   cloudy: {
-    few: 'https://imgur.com/pjNwJX0.png',
+    few: 'https://imgur.com/3nRw7Ex.png',
     scattered: 'https://imgur.com/Ybz4dD7.png',
     broken: 'https://imgur.com/N6XPp0z.png',
     overcast: 'https://imgur.com/fgvy2BA.png',
