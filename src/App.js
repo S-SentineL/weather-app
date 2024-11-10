@@ -83,8 +83,6 @@ const getTimeOfDay = (offset) => {
   }
 };
 
-
-
 const fetchWeather = async (city, lat, lon) => {
   let weatherAPI, forecastAPI;
 
@@ -108,11 +106,6 @@ const fetchWeather = async (city, lat, lon) => {
 
       const timezoneOffset = weatherData.timezone; // Extract timezone offset in seconds
       setCityOffset(timezoneOffset); // Update the offset for live location time
-
-      const timeOfDay = getTimeOfDay(timezoneOffset); // Pass the timezone offset here
-      const weatherCondition = weatherData.weather[0].main.toLowerCase();
-      const backgroundImage = getWeatherImage(weatherCondition, timeOfDay);
-      document.body.style.backgroundImage = `url(${backgroundImage})`;
 
       // Fetch forecast data
       const forecastResponse = await fetch(forecastAPI);
@@ -139,6 +132,14 @@ const fetchWeather = async (city, lat, lon) => {
       } else {
         console.error('Error fetching forecast data:', forecastData.message);
       }
+
+      // Wait until weatherData and timezoneOffset are ready to set background image
+      const timeOfDay = getTimeOfDay(timezoneOffset); // Get the current time of day using the timezone offset
+      const weatherCondition = weatherData.weather[0].main.toLowerCase();
+      const description = weatherData.weather[0].description;
+
+      const backgroundImage = getWeatherImage(weatherCondition, description, timeOfDay);
+      document.body.style.backgroundImage = `url(${backgroundImage})`;
     } else {
       console.error('Error fetching current weather data:', weatherData.message);
       setWeatherData(null);
@@ -202,167 +203,163 @@ useEffect(() => {
 }, []); 
 
 const weatherImages = {
-        clear: {
-          day: 'https://imgur.com/IUk42lM.png',
-          afternoon: 'https://imgur.com/q6t6ptQ.png',
-          evening: 'https://imgur.com/YWU1GuA.png',
-          night: 'https://imgur.com/L92szpF.png',
-        },
-        cloudy: {
-            few: 'https://imgur.com/pjNwJX0.png',
-            scattered: 'https://imgur.com/g7xc2z7.png',
-            broken: 'https://imgur.com/N6XPp0z.png',
-            overcast: 'https://imgur.com/fgvy2BA.png',
-        },
-        rain: {
-          light: 'https://imgur.com/m0gMBXV.png',
-          moderate: 'https://imgur.com/m0gMBXV.png',
-          heavy: 'https://imgur.com/m0gMBXV.png',
-          veryHeavy: 'https://imgur.com/m0gMBXV.png',
-          extreme: 'https://imgur.com/m0gMBXV.png',
-          freezing: 'https://imgur.com/m0gMBXV.png',
-          shower: 'https://imgur.com/m0gMBXV.png',
-          default: 'https://imgur.com/m0gMBXV.png',
-        },
-        snow: {
-            light: 'https://imgur.com/8RMTnVI.png',
-            moderate: 'https://imgur.com/4s8HrsR.png',
-            heavy: 'https://imgur.com/pJL05JT.png',
-            sleet: 'https://imgur.com/dB1NW5Kpng',
-        },
-        mist: 'https://imgur.com/ZLXD77B.png',
-        fog: 'https://imgur.com/Zu7OG3q.png',
-        dust: 'https://imgur.com/I2kVzKq.png',
-        sand: 'https://imgur.com/SEheaPG.png',
-        ash: 'https://imgur.com/KUSLKof.png',
-        squall: 'https://imgur.com/edmScn3.png',
-        tornado: 'https://imgur.com/uTGirxm.png',
-        haze: 'https://imgur.com/K8olMNz.png',
-        smoke:'https://imgur.com/IDarnHH.png',
-        thunderstorm: {
-            lightRain: 'https://imgur.com/GlwdxHi.png',
-            rain: 'https://imgur.com/bArLcQa.png',
-            heavyRain: 'https://imgur.com/CXRhOvi.png',
-            lightSnow: 'https://imgur.com/FsVKOqB.png',
-            snow: 'https://imgur.com/G40H7Lx.png',
-            general: 'https://imgur.com/JX2dgS8.png',
-        },
-        other: {
-            drizzle: 'https://imgur.com/m0gMBXV.png',
-        },
+  clear: {
+    day: 'https://imgur.com/IUk42lM.png',
+    afternoon: 'https://imgur.com/q6t6ptQ.png',
+    evening: 'https://imgur.com/YWU1GuA.png',
+    night: 'https://imgur.com/L92szpF.png',
+  },
+  cloudy: {
+    few: 'https://imgur.com/pjNwJX0.png',
+    scattered: 'https://imgur.com/Ybz4dD7.png',
+    broken: 'https://imgur.com/N6XPp0z.png',
+    overcast: 'https://imgur.com/fgvy2BA.png',
+    default: 'https://imgur.com/pjNwJX0.png',
+  },
+  rain: {
+    light: 'https://imgur.com/m0gMBXV.png',
+    moderate: 'https://imgur.com/m0gMBXV.png',
+    heavy: 'https://imgur.com/m0gMBXV.png',
+    veryHeavy: 'https://imgur.com/m0gMBXV.png',
+    extreme: 'https://imgur.com/m0gMBXV.png',
+    freezing: 'https://imgur.com/m0gMBXV.png',
+    shower: 'https://imgur.com/m0gMBXV.png',
+    default: 'https://imgur.com/m0gMBXV.png',
+  },
+  snow: {
+    light: 'https://imgur.com/8RMTnVI.png',
+    moderate: 'https://imgur.com/4s8HrsR.png',
+    heavy: 'https://imgur.com/pJL05JT.png',
+    sleet: 'https://imgur.com/dB1NW5K.png',
+    default: 'https://imgur.com/8RMTnVI.png',
+  },
+  mist: 'https://imgur.com/ZLXD77B.png',
+  fog: 'https://imgur.com/Zu7OG3q.png',
+  dust: 'https://imgur.com/I2kVzKq.png',
+  sand: 'https://imgur.com/SEheaPG.png',
+  ash: 'https://imgur.com/KUSLKof.png',
+  squall: 'https://imgur.com/edmScn3.png',
+  tornado: 'https://imgur.com/uTGirxm.png',
+  haze: 'https://imgur.com/K8olMNz.png',
+  smoke: 'https://imgur.com/IDarnHH.png',
+  thunderstorm: {
+    lightRain: 'https://imgur.com/GlwdxHi.png',
+    rain: 'https://imgur.com/bArTY3H.png',
+    heavyRain: 'https://imgur.com/p7BkmkD.png',
+    lightSnow: 'https://imgur.com/RPlTzvB.png',
+    snow: 'https://imgur.com/B4UosD1.png',
+    general: 'https://imgur.com/RPlTzvB.png',
+  },
+  other: {
+    drizzle: 'https://imgur.com/I1XcY70.png',
+  },
+  default: 'https://imgur.com/OGIfIQh.png',
 };
 
-const getWeatherImage = (weatherCondition, description) => {
-      const timeOfDay = getTimeOfDay(); // Get the current time of day
-  
-      switch (weatherCondition.toLowerCase()) {
-        case 'clear':
-            return weatherImages.clear[timeOfDay] || weatherImages.clear.day;
-  
-          case 'clouds':
-            const description = weatherData?.weather[0]?.description; // Get the description safely
-            switch (description?.toLowerCase().trim()) { // Adding trim to remove any extra spaces
-                case 'few clouds':
-                    return weatherImages.cloudy?.few ;
-                case 'scattered clouds':
-                    return weatherImages.cloudy?.scattered ;
-                case 'broken clouds':
-                    return weatherImages.cloudy?.broken ;
-                case 'overcast clouds':
-                    return weatherImages.cloudy?.overcast ;
-                default:
-                    return 'https://imgur.com/FbnBasB.png';
-            }
-        
-          case 'rain':
-            const rainDescription = weatherData?.weather[0]?.description; // Get the description safely
-            switch (rainDescription?.toLowerCase().trim()) { 
-                case 'light rain':
-                    return weatherImages.rain.light || weatherImages.rain.default;
-                case 'moderate rain':
-                    return weatherImages.rain.moderate || weatherImages.rain.default;
-                case 'heavy rain':
-                    return weatherImages.rain.heavy || weatherImages.rain.default;
-                case 'very heavy rain':
-                    return weatherImages.rain.veryHeavy || weatherImages.rain.default;
-                case 'extreme rain':
-                    return weatherImages.rain.extreme || weatherImages.rain.default;
-                case 'freezing rain':
-                    return weatherImages.rain.freezing || weatherImages.rain.default;
-                case 'shower rain':
-                    return weatherImages.rain.shower || weatherImages.rain.default;
-                default:
-                    return weatherImages.rain.default;
-            }
-          
-        case 'snow':
-            const snowDescription = weatherData?.weather[0]?.description; // Get the description safely
-            switch (snowDescription?.toLowerCase().trim()) {
-                case 'light snow':
-                    return weatherImages.snow.light ;
-                case 'moderate snow':
-                    return weatherImages.snow.moderate ;
-                case 'heavy snow':
-                    return weatherImages.snow.heavy ;
-                case 'sleet':
-                    return weatherImages.snow.sleet ;
-                default:
-                    return 'https://imgur.com/t2HUmJp.png';
-            }
-        
-        case 'thunderstorm':
-            const thunderstormDescription = weatherData?.weather[0]?.description; // Get the description safely
-            switch (thunderstormDescription?.toLowerCase().trim()) {
-                case 'light rain':
-                    return weatherImages.thunderstorm.lightRain  ;
-                case 'rain':
-                    return weatherImages.thunderstorm.rain ;
-                case 'heavy rain':
-                    return weatherImages.thunderstorm.heavyRain  ;
-                case 'light snow':
-                    return weatherImages.thunderstorm.lightSnow  ;
-                case 'snow':
-                    return weatherImages.thunderstorm.snow ;
-                default:
-                    return 'https://imgur.com/JX2dgS8.png';
-            }
-            
-  
-          case 'mist':
-              return weatherImages.mist ;
-  
-          case 'fog':
-              return weatherImages.fog  ;
-  
-          case 'dust':
-              return weatherImages.dust  ;
-  
-          case 'sand':
-              return weatherImages.sand ;
-  
-          case 'ash':
-              return weatherImages.ash  ;
-  
-          case 'squall':
-              return weatherImages.squall ;
-  
-          case 'tornado':
-              return weatherImages.tornado ;
+const getWeatherImage = (weatherCondition, description, timeOfDay) => {
+  switch (weatherCondition.toLowerCase()) {
+    case 'clear':
+      return weatherImages.clear[timeOfDay] || weatherImages.clear.day;
 
-          case 'haze':
-              return weatherImages.haze  ;
-  
-          case 'drizzle':
-              return weatherImages.other.drizzle  ;
-
-          case 'smoke':
-          return weatherImages.smoke  ;
-  
-          default:
-              return 'https://imgur.com/IUk42lM.png';
+    case 'clouds':
+      switch (description?.toLowerCase().trim()) {
+        case 'few clouds':
+          return weatherImages.cloudy.few;
+        case 'scattered clouds':
+          return weatherImages.cloudy.scattered;
+        case 'broken clouds':
+          return weatherImages.cloudy.broken;
+        case 'overcast clouds':
+          return weatherImages.cloudy.overcast;
+        default:
+          return weatherImages.cloudy.default;
       }
+
+    case 'rain':
+      switch (description?.toLowerCase().trim()) {
+        case 'light rain':
+          return weatherImages.rain.light;
+        case 'moderate rain':
+          return weatherImages.rain.moderate;
+        case 'heavy rain':
+          return weatherImages.rain.heavy;
+        case 'very heavy rain':
+          return weatherImages.rain.veryHeavy;
+        case 'extreme rain':
+          return weatherImages.rain.extreme;
+        case 'freezing rain':
+          return weatherImages.rain.freezing;
+        case 'shower rain':
+          return weatherImages.rain.shower;
+        default:
+          return weatherImages.rain.default;
+      }
+
+    case 'snow':
+      switch (description?.toLowerCase().trim()) {
+        case 'light snow':
+          return weatherImages.snow.light;
+        case 'moderate snow':
+          return weatherImages.snow.moderate;
+        case 'heavy snow':
+          return weatherImages.snow.heavy;
+        case 'sleet':
+          return weatherImages.snow.sleet;
+        default:
+          return weatherImages.snow.default;
+      }
+
+    case 'thunderstorm':
+      switch (description?.toLowerCase().trim()) {
+        case 'light rain':
+          return weatherImages.thunderstorm.lightRain;
+        case 'rain':
+          return weatherImages.thunderstorm.rain;
+        case 'heavy rain':
+          return weatherImages.thunderstorm.heavyRain;
+        case 'light snow':
+          return weatherImages.thunderstorm.lightSnow;
+        case 'snow':
+          return weatherImages.thunderstorm.snow;
+        default:
+          return weatherImages.thunderstorm.general;
+      }
+
+    case 'mist':
+      return weatherImages.mist;
+
+    case 'fog':
+      return weatherImages.fog;
+
+    case 'dust':
+      return weatherImages.dust;
+
+    case 'sand':
+      return weatherImages.sand;
+
+    case 'ash':
+      return weatherImages.ash;
+
+    case 'squall':
+      return weatherImages.squall;
+
+    case 'tornado':
+      return weatherImages.tornado;
+
+    case 'haze':
+      return weatherImages.haze;
+
+    case 'drizzle':
+      return weatherImages.other.drizzle;
+
+    case 'smoke':
+      return weatherImages.smoke;
+
+    default:
+      return weatherImages.default;
+  }
 };
-  
+
 const handleSearch = async (e) => {
   if (e.key === 'Enter') {
     await fetchWeather(inputCity); // Fetch weather and update cityOffset automatically
