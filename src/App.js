@@ -72,11 +72,11 @@ const getTimeOfDay = (offset) => {
   console.log("UTC Time:", utcTime);
   console.log("Hour:", hour);
 
-  if (hour >= 5 && hour < 12) {
+  if (hour >= 5 && hour < 11) {
       return 'day';
-  } else if (hour >= 12 && hour < 17) {
+  } else if (hour >= 11 && hour < 15) {
       return 'afternoon';
-  } else if (hour >= 17 && hour < 21) {
+  } else if (hour >= 15 && hour < 19) {
       return 'evening';
   } else {
       return 'night';
